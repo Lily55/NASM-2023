@@ -9,6 +9,10 @@
     lenEnterB equ $-EnterBMsg
     ResMsg db "The result is: "
     lenRes equ $-ResMsg
+    WrongAMsg db "A is 0!", 10
+    lenWrongA equ $-WrongAMsg
+    WrongBMsg db "B is 0!", 10
+    lenWrongB equ $-WrongBMsg
 
     section .bss
         A resd 1

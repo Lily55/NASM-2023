@@ -93,137 +93,142 @@
     10 0000004A 54686520726573756C-         ResMsg db "The result is: "
     10 00000053 742069733A20       
     11                                      lenRes equ $-ResMsg
-    12                                  
-    13                                      section .bss
-    14 00000000 ????????                        A resd 1
-    15 00000004 ????????                        B resd 1
-    16 00000008 <res Ah>                        OutBuf resb 10
-    17 00000012 <res Ah>                        InBuf   resb    10
-    18                                          lenIn   equ     $-InBuf 
-    19                                  
-    20                                      section .text
-    21                                          global _start
-    22                                  
-    23                                  _start:
-    24                                  
-    25                                  rightA:
-    26                                      ; write EnterAMsg
-    27 000000A9 B801000000                  mov     rax, 1        
-    28 000000AE BF01000000                  mov     rdi, 1        
-    29 000000B3 48BE-                       mov     rsi, EnterAMsg  
-    29 000000B5 [1400000000000000] 
-    30 000000BD BA1B000000                  mov     rdx, lenEnterA  
-    31 000000C2 0F05                        syscall  
-    32                                  
-    33                                      ; read A
-    34 000000C4 B800000000                  mov     rax, 0        
-    35 000000C9 BF00000000                  mov     rdi, 0        
-    36 000000CE 48BE-                       mov     rsi, InBuf    
-    36 000000D0 [1200000000000000] 
-    37 000000D8 BA0A000000                  mov     rdx, lenIn    
-    38 000000DD 0F05                        syscall  
-    39                                  
-    40 000000DF BE[12000000]                mov esi, InBuf
-    41 000000E4 E869FFFFFF                  call StrToInt64
-    42 000000E9 83FB00                      cmp ebx, 0
+    12 00000059 412069732030210A            WrongAMsg db "A is 0!", 10
+    13                                      lenWrongA equ $-WrongAMsg
+    14 00000061 422069732030210A            WrongBMsg db "B is 0!", 10
+    15                                      lenWrongB equ $-WrongBMsg
+    16                                  
+    17                                      section .bss
+    18 00000000 ????????                        A resd 1
+    19 00000004 ????????                        B resd 1
+    20 00000008 <res Ah>                        OutBuf resb 10
+    21 00000012 <res Ah>                        InBuf   resb    10
+    22                                          lenIn   equ     $-InBuf 
+    23                                  
+    24                                      section .text
+    25                                          global _start
+    26                                  
+    27                                  _start:
+    28                                  
+    29                                  rightA:
+    30                                      ; write EnterAMsg
+    31 000000A9 B801000000                  mov     rax, 1        
+    32 000000AE BF01000000                  mov     rdi, 1        
+    33 000000B3 48BE-                       mov     rsi, EnterAMsg  
+    33 000000B5 [1400000000000000] 
+    34 000000BD BA1B000000                  mov     rdx, lenEnterA  
+    35 000000C2 0F05                        syscall  
+    36                                  
+    37                                      ; read A
+    38 000000C4 B800000000                  mov     rax, 0        
+    39 000000C9 BF00000000                  mov     rdi, 0        
+    40 000000CE 48BE-                       mov     rsi, InBuf    
+    40 000000D0 [1200000000000000] 
+    41 000000D8 BA0A000000                  mov     rdx, lenIn    
+    42 000000DD 0F05                        syscall  
     43                                  
-    44                                      ; проверка неравенства А нулю
-    45 000000EC 83F800                      cmp eax, 0
-    46 000000EF 74B8                        je rightA
-    47 000000F1 890425[00000000]            mov [A], eax
-    48                                  
-    49                                  rightB:    
-    50                                      ; write EnterBMsg
-    51 000000F8 B801000000                  mov     rax, 1        
-    52 000000FD BF01000000                  mov     rdi, 1        
-    53 00000102 48BE-                       mov     rsi, EnterBMsg  
-    53 00000104 [2F00000000000000] 
-    54 0000010C BA1B000000                  mov     rdx, lenEnterB  
-    55 00000111 0F05                        syscall 
-    56                                  
-    57                                      ; read B
-    58 00000113 B800000000                  mov     rax, 0      
-    59 00000118 BF00000000                  mov     rdi, 0        
-    60 0000011D 48BE-                       mov     rsi, InBuf    
-    60 0000011F [1200000000000000] 
-    61 00000127 BA0A000000                  mov     rdx, lenIn    
-    62 0000012C 0F05                        syscall  
-    63                                  
-    64 0000012E BE[12000000]                mov esi, InBuf
-    65 00000133 E81AFFFFFF                  call StrToInt64
-    66 00000138 83FB00                      cmp ebx, 0
+    44 000000DF BE[12000000]                mov esi, InBuf
+    45 000000E4 E869FFFFFF                  call StrToInt64
+    46 000000E9 83FB00                      cmp ebx, 0
+    47                                  
+    48                                      ; проверка неравенства А нулю
+    49 000000EC 83F800                      cmp eax, 0
+    50 000000EF 74B8                        je rightA
+    51 000000F1 890425[00000000]            mov [A], eax
+    52                                  
+    53                                  rightB:    
+    54                                      ; write EnterBMsg
+    55 000000F8 B801000000                  mov     rax, 1        
+    56 000000FD BF01000000                  mov     rdi, 1        
+    57 00000102 48BE-                       mov     rsi, EnterBMsg  
+    57 00000104 [2F00000000000000] 
+    58 0000010C BA1B000000                  mov     rdx, lenEnterB  
+    59 00000111 0F05                        syscall 
+    60                                  
+    61                                      ; read B
+    62 00000113 B800000000                  mov     rax, 0      
+    63 00000118 BF00000000                  mov     rdi, 0        
+    64 0000011D 48BE-                       mov     rsi, InBuf    
+    64 0000011F [1200000000000000] 
+    65 00000127 BA0A000000                  mov     rdx, lenIn    
+    66 0000012C 0F05                        syscall  
     67                                  
-    68                                      ; проверка неравенства B нулю
-    69 0000013B 83F800                      cmp eax, 0
-    70 0000013E 74B8                        je rightB
-    71 00000140 890425[04000000]            mov [B], eax
-    72                                  
-    73 00000147 668B0425[00000000]          mov ax, [A]
-    74 0000014F 668B1C25[04000000]          mov bx, [B]
-    75 00000157 66F7EB                      imul bx
+    68 0000012E BE[12000000]                mov esi, InBuf
+    69 00000133 E81AFFFFFF                  call StrToInt64
+    70 00000138 83FB00                      cmp ebx, 0
+    71                                  
+    72                                      ; проверка неравенства B нулю
+    73 0000013B 83F800                      cmp eax, 0
+    74 0000013E 74B8                        je rightB
+    75 00000140 890425[04000000]            mov [B], eax
     76                                  
-    77                                      ; начало программы
-    78 0000015A 6683F800                    cmp ax, 0
-    79 0000015E 7E28                        jle less
-    80 00000160 668B0425[00000000]          mov ax, [A]
-    81 00000168 668B1C25[04000000]          mov bx, [B]
-    82 00000170 6629D8                      sub ax, bx
-    83 00000173 6689C1                      mov cx, ax
-    84 00000176 668B0425[00000000]          mov ax, [A]
-    85 0000017E 6601D8                      add ax, bx
-    86 00000181 6699                        cwd
-    87 00000183 66F7F9                      idiv cx
-    88 00000186 EB0B                        jmp com
-    89                                  
-    90                                  less:
-    91 00000188 89C3                        mov ebx, eax
-    92 0000018A 66B888FF                    mov ax, -120
-    93 0000018E 6699                        cwd
-    94 00000190 66F7FB                      idiv bx
-    95                                  
-    96                                  com:
-    97                                  
-    98 00000193 89C3                        mov ebx, eax ; переносим данные из EAX в EBX
-    99                                  
-   100                                      ; write ResMsg
-   101 00000195 B801000000                  mov     rax, 1        
-   102 0000019A BF01000000                  mov     rdi, 1        
-   103 0000019F 48BE-                       mov     rsi, ResMsg  
-   103 000001A1 [4A00000000000000] 
-   104 000001A9 BA0F000000                  mov     rdx, lenRes  
-   105 000001AE 0F05                        syscall 
-   106                                  
-   107 000001B0 89D8                        mov eax, ebx ; переносим число обратно в EAX
-   108                                  
-   109                                      ; конвертируем частное из целого в строку
-   110 000001B2 BE[08000000]                mov esi, OutBuf
-   111 000001B7 98                          cwde
-   112 000001B8 E843FEFFFF                  call IntToStr64
+    77                                      ; перемножение чисел для условия
+    78 00000147 668B0425[00000000]          mov ax, [A]
+    79 0000014F 668B1C25[04000000]          mov bx, [B]
+    80 00000157 66F7EB                      imul bx
+    81                                  
+    82                                      ; начало сравнения
+    83 0000015A 6683F800                    cmp ax, 0
+    84 0000015E 7E28                        jle less
+    85 00000160 668B0425[00000000]          mov ax, [A]
+    86 00000168 668B1C25[04000000]          mov bx, [B]
+    87 00000170 6629D8                      sub ax, bx
+    88 00000173 6689C1                      mov cx, ax
+    89 00000176 668B0425[00000000]          mov ax, [A]
+    90 0000017E 6601D8                      add ax, bx
+    91 00000181 6699                        cwd
+    92 00000183 66F7F9                      idiv cx
+    93 00000186 EB0B                        jmp com
+    94                                  
+    95                                  less:
+    96 00000188 89C3                        mov ebx, eax
+    97 0000018A 66B888FF                    mov ax, -120
+    98 0000018E 6699                        cwd
+    99 00000190 66F7FB                      idiv bx
+   100                                  
+   101                                  com:
+   102                                  
+   103 00000193 89C3                        mov ebx, eax ; переносим данные из EAX в EBX
+   104                                  
+   105                                      ; write ResMsg
+   106 00000195 B801000000                  mov     rax, 1        
+   107 0000019A BF01000000                  mov     rdi, 1        
+   108 0000019F 48BE-                       mov     rsi, ResMsg  
+   108 000001A1 [4A00000000000000] 
+   109 000001A9 BA0F000000                  mov     rdx, lenRes  
+   110 000001AE 0F05                        syscall 
+   111                                  
+   112 000001B0 89D8                        mov eax, ebx ; переносим число обратно в EAX
    113                                  
-   114                                      ; write
-   115 000001BD 89C2                        mov edx, eax
-   116 000001BF B801000000                  mov eax, 1        
-   117 000001C4 BF01000000                  mov edi, 1        
-   118 000001C9 0F05                        syscall 
-   119                                      
-   120                                  
-   121                                      ; write ExitMsg
-   122 000001CB B801000000                  mov     rax, 1        
-   123 000001D0 BF01000000                  mov     rdi, 1        
-   124 000001D5 48BE-                       mov     rsi, ExitMsg  
-   124 000001D7 [0000000000000000] 
-   125 000001DF BA14000000                  mov     rdx, lenExit  
-   126 000001E4 0F05                        syscall  
-   127                                  
-   128                                      ; read Enter
-   129 000001E6 B800000000                  mov     rax, 0        
-   130 000001EB BF00000000                  mov     rdi, 0        
-   131 000001F0 48BE-                       mov     rsi, InBuf    
-   131 000001F2 [1200000000000000] 
-   132 000001FA BA0A000000                  mov     rdx, lenIn    
-   133 000001FF 0F05                        syscall  
-   134                                  
-   135                                      ;exit
-   136 00000201 B83C000000                  mov rax, 60
-   137 00000206 4831FF                      xor rdi, rdi
-   138 00000209 0F05                        syscall
+   114                                      ; конвертируем частное из целого в строку
+   115 000001B2 BE[08000000]                mov esi, OutBuf
+   116 000001B7 98                          cwde
+   117 000001B8 E843FEFFFF                  call IntToStr64
+   118                                  
+   119                                      ; write
+   120 000001BD 89C2                        mov edx, eax
+   121 000001BF B801000000                  mov eax, 1        
+   122 000001C4 BF01000000                  mov edi, 1        
+   123 000001C9 0F05                        syscall 
+   124                                      
+   125                                  
+   126                                      ; write ExitMsg
+   127 000001CB B801000000                  mov     rax, 1        
+   128 000001D0 BF01000000                  mov     rdi, 1        
+   129 000001D5 48BE-                       mov     rsi, ExitMsg  
+   129 000001D7 [0000000000000000] 
+   130 000001DF BA14000000                  mov     rdx, lenExit  
+   131 000001E4 0F05                        syscall  
+   132                                  
+   133                                      ; read Enter
+   134 000001E6 B800000000                  mov     rax, 0        
+   135 000001EB BF00000000                  mov     rdi, 0        
+   136 000001F0 48BE-                       mov     rsi, InBuf    
+   136 000001F2 [1200000000000000] 
+   137 000001FA BA0A000000                  mov     rdx, lenIn    
+   138 000001FF 0F05                        syscall  
+   139                                  
+   140                                      ;exit
+   141 00000201 B83C000000                  mov rax, 60
+   142 00000206 4831FF                      xor rdi, rdi
+   143 00000209 0F05                        syscall
