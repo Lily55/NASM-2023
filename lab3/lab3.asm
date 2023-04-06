@@ -80,9 +80,9 @@ rightB:
     imul bx
 
     ; начало сравнения
-    cmp ax, 0
-    jle less
-    mov ax, [A]
+    cmp ax, 0   ; сравнение данных в ах с 0
+    jl less     ; если число в ах < 0, переходим на метку less 
+    mov ax, [A] ; если число в ах > 0, продолжаем вычисления в этом блоке
     mov bx, [B]
     sub ax, bx
     mov cx, ax
@@ -90,15 +90,15 @@ rightB:
     add ax, bx
     cwd
     idiv cx
-    jmp com
+    jmp com     ; по завершению вычислений переходим на метку com
 
-less:
+less:               ; при переходе по метке less делаем другие вычисления
     mov ebx, eax
     mov ax, -120
     cwd
     idiv bx
 
-com:
+com:                ; при переходе не метку com выводим результат
 
     mov ebx, eax ; переносим данные из EAX в EBX
 
