@@ -17,8 +17,8 @@ _start:
 
     mov ebx, 0
     mov ecx, 15
-    mov rsi, 0
-    mov rdi, 0
+    xor rsi, rsi ; Unic counter
+    xor rdi, rdi ; Replicated counter
 
 cycle1:         ; цикл прохода по массиву MAS в поиске уникальных элементов
     push rcx
@@ -42,13 +42,16 @@ next1:
     jl dobU
     jge dobR
     jmp next2
+
 dobU:
     mov [rsi*2 + NewUnicMAS], ax    ; добавляем уникальные элементы в NewUnicMAS
     inc rsi
     jmp next2
+
 dobR:
     mov [rdi*2 + NewMAS], ax    ; добавляем повторяющиеся элменеты в NewMAS
     inc rdi
+    
 next2:
     pop rbx
     inc ebx
