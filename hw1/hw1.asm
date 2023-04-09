@@ -1,30 +1,46 @@
 %include "lib.asm"
 
+; %define INPUT_LEN 33
+
     section .data
+    EnterMsg db "Enter the string 32 letters long or smaller: ", 10
+    lenEnter equ $-EnterMsg
+    WordsNumber db "Words number is: "
+    lenWordsNumber equ $-WordsNumber
+    INPUT_LEN db 33
+    LettersNumber db "Letters numbers are: "
+    lenLettersNumber equ $-LettersNumber
     ExitMsg db "",10
     lenExit equ $-ExitMsg
-    INPUT_LEN db 32
-    input db "qwerty dfgh vbnmfcser ah kljwert"
+    ; input db "qwerty dfgh vbnmfcser ah kljwert"
 
     section .bss
     LetterCount resb 32
     OutBuf resb 32
-    ; input resb 32
+    input resb 33
 
     section .text
     global _start
 
 _start:
-    ; mov rdi, 0
-    ; mov rsi, input
-    ; mov rdx, 32
-    ; syscall
 
+    ; write EnterMsg
+    mov     rax, 1        
+    mov     rdi, 1        
+    mov     rsi, EnterMsg  
+    mov     rdx, lenEnter  
+    syscall 
+
+    mov rax, 0
+    mov rdi, 0
+    mov rsi, input
+    mov rdx, INPUT_LEN
+    syscall
+
+    mov rcx, rax
     mov ebx, 0
     xor rdx, rdx ; letter counter
     xor rax, rax ; words counter
-    mov rsi, input
-    mov ecx, 33
     dec rsi
    
 
@@ -35,7 +51,7 @@ main_cycle:
     cmp byte[rsi], ' '
     je countW
 
-    cmp byte[rsi], 0
+    cmp byte[rsi], 10
     je countW
     jmp next
 
@@ -50,6 +66,16 @@ countW:
 next:
     loop main_cycle
 
+    push rax
+
+    ; выводим сообщение о количестве слов
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, WordsNumber
+    mov rdx, lenWordsNumber
+    syscall
+
+    pop rax
     push rax
 
     ; конвертируем частное из целого в строку
@@ -71,6 +97,17 @@ next:
     syscall
 
     pop rax
+    push rax
+
+    ; выводим сообщение о количестве букв в словах
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, LettersNumber
+    mov rdx, lenLettersNumber
+    syscall
+
+    pop rax
+    push rax
 
     mov ebx, 0
     mov ecx, eax
