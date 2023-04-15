@@ -1,29 +1,93 @@
 %include "lib.asm"
 
 section .data
-MAS dw 3, 9, 2, 2, 5, 8, 1, 5, -1, 8, 10, 15, 9, 5, -1
+; MAS dw 3, 9, 2, 2, 5, 8, 1, 5, -1, 8, 10, 15, 9, 5, -1
 ExitMsg db "",10
 lenExit equ $-ExitMsg
+EnterMsg db "Enter the array which is 25 or smaller numbers: ", 10
+lenEnter equ $-EnterMsg
+
+err_num db "Only numbers and spaces can be entered", 10
+err_num_len equ $-err_num
+
+ResultMsg db "New array is: ", 10
+lenResult equ $-ResultMsg
+
+input times 255 db 0
+len_input equ $-input
 
 section .bss
-NewUnicMAS resw 15
-NewMAS resw 15
-OutBuf resb 10
+NewUnicMAS resw 25
+NewMAS resw 25
+OutBuf resb 50
+MAS resw 25
 
 section .text
 global _start
 
 _start:
 
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, EnterMsg
+    mov rdx, lenEnter
+    syscall
+
+    mov rax, 0
+    mov rdi, 0
+    mov rsi, input
+    mov rdx, len_input
+    syscall
+
+    mov rcx, rax
+    xor rdx, rdx
+    xor r10, r10
+
+process_line:
+    cmp byte[input + rdx], 10
+    je process_number
+
+    cmp byte[input + rdx], ' '
+    jne next
+
+    mov byte[input + rdx], 10
+    cmp r10, rdx
+    jne process_number
+    jmp next
+
+process_number:
+    push rdx
+
+    call StrToInt64
+    cmp rbx, 0
+    jne error_num
+
+    mov [MAS + 2 * rdi], rax
+    inc rdi
+
+    pop rdx
+    mov r10, rdx
+    inc r10
+    lea rsi, [input + r10]
+
+next:
+    inc rdx
+    loop process_line
+
+
+
+;logic
+
     mov ebx, 0
-    mov ecx, 15
+    mov ecx, edi
+    mov r10, rdi
     xor rsi, rsi ; Unic counter
     xor rdi, rdi ; Replicated counter
 
 cycle1:         ; цикл прохода по массиву MAS в поиске уникальных элементов
     push rcx
     mov dx, 0
-    mov ecx, 15
+    mov rcx, r10
     mov ax, [ebx*2 + MAS]
     push rbx
     mov ebx, 0
@@ -60,21 +124,21 @@ next2:
 
     mov ebx, 0
     mov rcx, rsi
-cycle5:
+new_array1:
     mov ax, [ebx*2 + NewUnicMAS]
     mov [ebx*2 + MAS], ax
     inc ebx
-    loop cycle5
+    loop new_array1
 
     mov edx, ebx
     mov ebx, 0
     mov rcx, rdi
-cycle6:
+new_array2:
     mov ax, [ebx*2 + NewMAS]
     mov [edx*2 + MAS], ax
     inc ebx
     inc edx
-    loop cycle6
+    loop new_array2
 
 
 ;     mov ebx, 0
@@ -106,9 +170,17 @@ cycle6:
 ;     mov     rdx, lenExit  
 ;     syscall  
 
+    ; Result Message
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, ResultMsg
+    mov rdx, lenResult
+    syscall
+
+
     mov ebx, 0
-    mov ecx, 15
-cycle4:
+    mov rcx, r10
+output_cycle:
     mov ax, [ebx*2 + MAS]
     inc ebx
     push rcx
@@ -125,7 +197,7 @@ cycle4:
     syscall 
 
     pop rcx
-    loop cycle4  
+    loop output_cycle  
 
     ; write ExitMsg
     mov     rax, 1        
@@ -134,7 +206,15 @@ cycle4:
     mov     rdx, lenExit  
     syscall  
 
-    ;exit
+exit:    ;exit
     mov rax, 60
     xor rdi, rdi
     syscall
+
+error_num:
+    mov rax, 1
+    mov rdi, 1   
+    mov rsi, err_num
+    mov rdx, err_num_len
+    syscall
+    jmp exit
