@@ -1,7 +1,7 @@
 %include "lib.asm"
 
 section .data
-; MAS dw 3, 9, 2, 2, 5, 8, 1, 5, -1, 8, 10, 15, 9, 5, -1
+; MAS dw 3 9 2 2 5 8 1 5 -1 8 10 15 9 5 -1 90 90 44 7 7 60 7 90 22 8
 ExitMsg db "",10
 lenExit equ $-ExitMsg
 EnterMsg db "Enter the array which is 25 or smaller numbers: ", 10
@@ -125,7 +125,7 @@ next2:
     mov ebx, 0
     mov rcx, rsi
 new_array1:
-    mov ax, [ebx*2 + NewUnicMAS]
+    mov ax, [ebx*2 + NewUnicMAS]    ; добавляем в массив сначала неповторяющиеся элементы
     mov [ebx*2 + MAS], ax
     inc ebx
     loop new_array1
@@ -134,41 +134,12 @@ new_array1:
     mov ebx, 0
     mov rcx, rdi
 new_array2:
-    mov ax, [ebx*2 + NewMAS]
+    mov ax, [ebx*2 + NewMAS]    ; потом добавляем в массив повторяющиеся элементы
     mov [edx*2 + MAS], ax
     inc ebx
     inc edx
     loop new_array2
 
-
-;     mov ebx, 0
-;     mov ecx, 12
-; cycle3:
-;     mov ax, [ebx*2 + NewUnicMAS]
-;     inc ebx
-;     push rcx
-
-;     ; конвертируем частное из целого в строку
-;     mov esi, OutBuf
-;     cwde
-;     call IntToStr64
-
-;     ; write
-;     mov edx, eax
-;     mov eax, 1        
-;     mov edi, 1        
-;     syscall 
-
-;     pop rcx
-;     loop cycle3
-
-; ;end:
-;     ; write ExitMsg
-;     mov     rax, 1        
-;     mov     rdi, 1        
-;     mov     rsi, ExitMsg  
-;     mov     rdx, lenExit  
-;     syscall  
 
     ; Result Message
     mov rax, 1

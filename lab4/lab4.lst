@@ -216,7 +216,7 @@
    125 00000199 BB00000000                  mov ebx, 0
    126 0000019E 4889F1                      mov rcx, rsi
    127                                  new_array1:
-   128 000001A1 66678B841B-                 mov ax, [ebx*2 + NewUnicMAS]
+   128 000001A1 66678B841B-                 mov ax, [ebx*2 + NewUnicMAS]    ; добавляем в массив сначала неповторяющиеся элементы
    128 000001A6 [00000000]         
    129 000001AA 666789841B-                 mov [ebx*2 + MAS], ax
    129 000001AF [96000000]         
@@ -227,7 +227,7 @@
    134 000001B9 BB00000000                  mov ebx, 0
    135 000001BE 4889F9                      mov rcx, rdi
    136                                  new_array2:
-   137 000001C1 66678B841B-                 mov ax, [ebx*2 + NewMAS]
+   137 000001C1 66678B841B-                 mov ax, [ebx*2 + NewMAS]    ; потом добавляем в массив повторяющиеся элементы
    137 000001C6 [32000000]         
    138 000001CA 6667898412-                 mov [edx*2 + MAS], ax
    138 000001CF [96000000]         
@@ -236,84 +236,55 @@
    141 000001D7 E2E8                        loop new_array2
    142                                  
    143                                  
-   144                                  ;     mov ebx, 0
-   145                                  ;     mov ecx, 12
-   146                                  ; cycle3:
-   147                                  ;     mov ax, [ebx*2 + NewUnicMAS]
-   148                                  ;     inc ebx
-   149                                  ;     push rcx
+   144                                      ; Result Message
+   145 000001D9 B801000000                  mov rax, 1
+   146 000001DE BF01000000                  mov rdi, 1
+   147 000001E3 48BE-                       mov rsi, ResultMsg
+   147 000001E5 [5900000000000000] 
+   148 000001ED BA0F000000                  mov rdx, lenResult
+   149 000001F2 0F05                        syscall
    150                                  
-   151                                  ;     ; конвертируем частное из целого в строку
-   152                                  ;     mov esi, OutBuf
-   153                                  ;     cwde
-   154                                  ;     call IntToStr64
-   155                                  
-   156                                  ;     ; write
-   157                                  ;     mov edx, eax
-   158                                  ;     mov eax, 1        
-   159                                  ;     mov edi, 1        
-   160                                  ;     syscall 
-   161                                  
-   162                                  ;     pop rcx
-   163                                  ;     loop cycle3
-   164                                  
-   165                                  ; ;end:
-   166                                  ;     ; write ExitMsg
-   167                                  ;     mov     rax, 1        
-   168                                  ;     mov     rdi, 1        
-   169                                  ;     mov     rsi, ExitMsg  
-   170                                  ;     mov     rdx, lenExit  
-   171                                  ;     syscall  
+   151                                  
+   152 000001F4 BB00000000                  mov ebx, 0
+   153 000001F9 4C89D1                      mov rcx, r10
+   154                                  output_cycle:
+   155 000001FC 66678B841B-                 mov ax, [ebx*2 + MAS]
+   155 00000201 [96000000]         
+   156 00000205 FFC3                        inc ebx
+   157 00000207 51                          push rcx
+   158                                  
+   159                                      ; конвертируем частное из целого в строку
+   160 00000208 BE[64000000]                mov esi, OutBuf
+   161 0000020D 98                          cwde
+   162 0000020E E8EDFDFFFF                  call IntToStr64
+   163                                  
+   164                                      ; write
+   165 00000213 89C2                        mov edx, eax
+   166 00000215 B801000000                  mov eax, 1        
+   167 0000021A BF01000000                  mov edi, 1        
+   168 0000021F 0F05                        syscall 
+   169                                  
+   170 00000221 59                          pop rcx
+   171 00000222 E2D8                        loop output_cycle  
    172                                  
-   173                                      ; Result Message
-   174 000001D9 B801000000                  mov rax, 1
-   175 000001DE BF01000000                  mov rdi, 1
-   176 000001E3 48BE-                       mov rsi, ResultMsg
-   176 000001E5 [5900000000000000] 
-   177 000001ED BA0F000000                  mov rdx, lenResult
-   178 000001F2 0F05                        syscall
+   173                                      ; write ExitMsg
+   174 00000224 B801000000                  mov     rax, 1        
+   175 00000229 BF01000000                  mov     rdi, 1        
+   176 0000022E 48BE-                       mov     rsi, ExitMsg  
+   176 00000230 [0000000000000000] 
+   177 00000238 BA01000000                  mov     rdx, lenExit  
+   178 0000023D 0F05                        syscall  
    179                                  
-   180                                  
-   181 000001F4 BB00000000                  mov ebx, 0
-   182 000001F9 4C89D1                      mov rcx, r10
-   183                                  output_cycle:
-   184 000001FC 66678B841B-                 mov ax, [ebx*2 + MAS]
-   184 00000201 [96000000]         
-   185 00000205 FFC3                        inc ebx
-   186 00000207 51                          push rcx
-   187                                  
-   188                                      ; конвертируем частное из целого в строку
-   189 00000208 BE[64000000]                mov esi, OutBuf
-   190 0000020D 98                          cwde
-   191 0000020E E8EDFDFFFF                  call IntToStr64
-   192                                  
-   193                                      ; write
-   194 00000213 89C2                        mov edx, eax
-   195 00000215 B801000000                  mov eax, 1        
-   196 0000021A BF01000000                  mov edi, 1        
-   197 0000021F 0F05                        syscall 
-   198                                  
-   199 00000221 59                          pop rcx
-   200 00000222 E2D8                        loop output_cycle  
-   201                                  
-   202                                      ; write ExitMsg
-   203 00000224 B801000000                  mov     rax, 1        
-   204 00000229 BF01000000                  mov     rdi, 1        
-   205 0000022E 48BE-                       mov     rsi, ExitMsg  
-   205 00000230 [0000000000000000] 
-   206 00000238 BA01000000                  mov     rdx, lenExit  
-   207 0000023D 0F05                        syscall  
-   208                                  
-   209                                  exit:    ;exit
-   210 0000023F B83C000000                  mov rax, 60
-   211 00000244 4831FF                      xor rdi, rdi
-   212 00000247 0F05                        syscall
-   213                                  
-   214                                  error_num:
-   215 00000249 B801000000                  mov rax, 1
-   216 0000024E BF01000000                  mov rdi, 1   
-   217 00000253 48BE-                       mov rsi, err_num
-   217 00000255 [3200000000000000] 
-   218 0000025D BA27000000                  mov rdx, err_num_len
-   219 00000262 0F05                        syscall
-   220 00000264 EBD9                        jmp exit
+   180                                  exit:    ;exit
+   181 0000023F B83C000000                  mov rax, 60
+   182 00000244 4831FF                      xor rdi, rdi
+   183 00000247 0F05                        syscall
+   184                                  
+   185                                  error_num:
+   186 00000249 B801000000                  mov rax, 1
+   187 0000024E BF01000000                  mov rdi, 1   
+   188 00000253 48BE-                       mov rsi, err_num
+   188 00000255 [3200000000000000] 
+   189 0000025D BA27000000                  mov rdx, err_num_len
+   190 00000262 0F05                        syscall
+   191 00000264 EBD9                        jmp exit
