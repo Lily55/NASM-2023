@@ -97,7 +97,7 @@
     12                                      lenLettersNumber equ $-LettersNumber
     13 00000055 0A                          ExitMsg db "",10
     14                                      lenExit equ $-ExitMsg
-    15                                      ; input db "qwerty dfgh vbnmfcser ah kljwert"
+    15                                      ; input db "qwerty d fgh vbnmf cser ah kljwert"
     16                                  
     17                                      section .bss
     18 00000000 <res 20h>                   LetterCount resb 32

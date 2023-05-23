@@ -12,7 +12,7 @@
     lenLettersNumber equ $-LettersNumber
     ExitMsg db "",10
     lenExit equ $-ExitMsg
-    ; input db "qwerty dfgh vbnmfcser ah kljwert"
+    ; input db "qwerty d fgh vbnmf cser ah kljwert"
 
     section .bss
     LetterCount resb 32
